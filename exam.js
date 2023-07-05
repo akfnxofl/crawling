@@ -1,55 +1,47 @@
 const axios = require('axios');
-const natural = require('natural');
-const fs = require('fs');
-const tokenizer = new natural.WordTokenizer();
 
-
-const reg = /[\{\}\[\]\/?.,;:|\)\*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
-const eng = /[^a-zA-Z]+/g;
-
-let wordCount = 0;
-let duplicateNum = 0;
 let html;
+let htmlArr = [];
+let arr = [];
 let wordArr = [];
 
 async function getHTML() {
   try {
-    res = await axios.get('https://www.naver.com');
+    const res = await axios.get('https://www.naver.com');
     html = res.data;
-    return html;
+    htmlArr = String(html).split('');
   } catch (err) {
     console.log(err);
-    return;
   }
 }
 
-let format;
-
 getHTML()
   .then(() => {
-    format = html.replace(/\n/g, ' ');
-    format = format.replace(reg, ' ');
-    format = format.replace(eng, ' ');
-    let tokens = tokenizer.tokenize(format);
-    // console.log(tokens);
-    for (let i = 0; i < tokens.length; i++) {
-      if (tokens[i].length > 5) {
-        continue;
-      } else {
-        if (wordArr.includes(tokens[i])) {
-          duplicateNum++;
+    let str = '';
+    for (let i = 0; i < htmlArr.length; i++) {
+      if (!((htmlArr[i] >= 'A' && htmlArr[i] <= 'Z') || (htmlArr[i] >= 'a' && htmlArr[i] <= 'z'))) {
+        if (str !== '') {
+          arr.push(str);
+          str = '';
         } else {
-          wordArr.push(tokens[i]);
-          wordCount++;
+          continue;
         }
+      } else {
+        str += htmlArr[i];
       }
     }
-    fs.writeFileSync('wordlist.json', JSON.stringify(wordArr));
+  
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].length < 5) {
+        continue;
+      } else {
+        wordArr.push(arr[i]);
+      }
+    }
     console.log(wordArr);
-    console.log(`wordNum: ${wordCount}`);
-    console.log(`not insert wordNum: ${duplicateNum}`);
   });
 
 
-
-
+console.log('ㄱ'.charCodeAt());
+console.log('힣'.charCodeAt());
