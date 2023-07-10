@@ -17,6 +17,7 @@ async function getHTML() {
 
 getHTML()
   .then(() => {
+    console.log(htmlArr.length);
     let str = '';
     for (let i = 0; i < htmlArr.length; i++) {
       if (!((htmlArr[i] >= 'A' && htmlArr[i] <= 'Z') || (htmlArr[i] >= 'a' && htmlArr[i] <= 'z'))) {
@@ -40,8 +41,5 @@ getHTML()
       }
     }
     console.log(wordArr);
+    console.log(wordArr.length);
   });
-
-
-console.log('ㄱ'.charCodeAt());
-console.log('힣'.charCodeAt());
